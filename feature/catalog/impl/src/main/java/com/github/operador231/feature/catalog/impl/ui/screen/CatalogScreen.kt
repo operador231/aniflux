@@ -5,25 +5,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.operador231.core.ui.theme.AniFluxTheme
 import com.github.operador231.feature.catalog.impl.R
-import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogUiState
 import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogViewModel
 
 @Composable
@@ -68,7 +63,15 @@ private fun CatalogContent(
             .padding(horizontal = AniFluxTheme.paddings.medium)
     ) {
         repeat(70) {
-            item { Text("Ça marche !") }
+            item {
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .padding(vertical = AniFluxTheme.paddings.small)
+                ) {
+                    Text("ça marche !")
+                }
+            }
         }
     }
 }

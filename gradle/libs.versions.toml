@@ -18,7 +18,7 @@ okhttp = "5.3.2"
 room = "2.8.4"
 paging = "3.3.6"
 coil = "3.3.0"
-kotlinxSerialization = "1.9.0"
+kotlinxSerialization = "1.10.0"
 datastore = "1.2.0"
 splashscreen = "1.2.0"
 tink = "1.20.0"
@@ -26,8 +26,7 @@ timber = "5.0.1"
 kotlinx-collections-immutable = "0.4.0"
 appcompat = "1.7.1"
 material = "1.13.0"
-uiGraphics = "1.10.1"
-material3 = "1.5.0-alpha12"
+#uiGraphics = "1.10.1"
 navigationCommonKtx = "2.9.6"
 navigationRuntimeKtx = "2.9.6"
 jetbrainsKotlinJvm = "2.3.0"
@@ -94,17 +93,16 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+android-application = { id = "com.android.application" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose" }
+ksp = { id = "com.google.devtools.ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "agp" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" }
 

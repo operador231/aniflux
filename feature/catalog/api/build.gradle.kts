@@ -1,49 +1,18 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.serialization)
+    id("com.github.operador231.aniflux.library")
 }
 
 android {
     namespace = "com.github.operador231.feature.catalog.api"
-    compileSdk {
-        version = release(36)
-    }
-
-    defaultConfig {
-        minSdk = 26
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    buildFeatures { // todo: use another plugin for api modules
+        compose = false
+        androidResources {
+            enable = false
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        freeCompilerArgs.addAll(
-            "-Xexplicit-api=warning",
-            "-Xcontext-parameters",
-            "-progressive"
-        )
+        viewBinding = false
     }
 }
 
 dependencies {
     implementation(project(":core:navigation"))
-
-    implementation(libs.kotlinx.serialization.json)
 }
