@@ -36,6 +36,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         freeCompilerArgs.addAll(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xexplicit-api=warning",
@@ -47,6 +49,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+
+    // Lottie
+    implementation(libs.lottie.compose)
+
+    // Logging
+    implementation(libs.timber)
+
+    // Images
+    implementation(libs.coil.compose)
 
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)

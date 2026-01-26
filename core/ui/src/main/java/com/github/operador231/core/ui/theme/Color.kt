@@ -4,6 +4,20 @@ import androidx.compose.ui.graphics.Color
 
 public val seedColor: Color = Color(0xFFA61C3C)
 
+/* Anime rating colors */
+public val scoreExcellentColor: Color = Color(0xFF22C55E)
+public val scoreGoodColor: Color = Color(0xFF84CC16)
+public val scoreNormalColor: Color = Color(0xFFEAB308)
+public val scoreBadColor: Color = Color(0xFFEF4444)
+public val scoreWorstColor: Color = Color(0xFF333333)
+
+/* Age rating colors */
+/*public val ratingGColor = Color(0xFF4CAF50)
+public val ratingPGColor = Color(0xFF66BB6A)
+public val ratingPG13Color = Color(0xFF8BC34A)
+public val ratingR17Color = Color(0xFFFF9800)
+public val ratingRColor = Color(0xFFF44336)*/
+
 public val primaryLight: Color = Color(0xFF8F4951)
 public val onPrimaryLight: Color = Color(0xFFFFFFFF)
 public val primaryContainerLight: Color = Color(0xFFFFDADB)

@@ -22,3 +22,9 @@ dependencyResolutionManagement {
 rootProject.name = "AniFlux"
 include(":app")
 include(":core:ui")
+include(":core:navigation")
+include(":feature:feed:impl")
+include(":feature:catalog:api")
+include(":feature:catalog:impl")
+include(":feature:feed:api")
+include(":core:domain")

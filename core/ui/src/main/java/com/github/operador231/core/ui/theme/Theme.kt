@@ -2,15 +2,18 @@ package com.github.operador231.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -96,11 +99,34 @@ public data class ColorFamily(
     val onColorContainer: Color
 )
 
+/**
+ * Global access point for AniFlux design tokens.
+ * * This object provides a unified way to access theme-specific constants
+ * like paddings and component sizes throughout the application.
+ *
+ * Example:
+ * ```
+ * Modifier.padding(AniFluxTheme.paddings.medium)
+ * ```
+ * */
+public object AniFluxTheme {
+    public val paddings: AniFluxPaddings
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAniFluxPaddings.current
+
+    public val sizes: AniFluxSizes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalAniFluxSizes.current
+
+}
+
 @Composable
 public fun AniFluxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -112,9 +138,17 @@ public fun AniFluxTheme(
         else -> lightScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    val paddings = AniFluxPaddings()
+    val sizes = AniFluxSizes()
+
+    CompositionLocalProvider(
+        LocalAniFluxPaddings provides paddings,
+        LocalAniFluxSizes provides sizes
+    ) {
+        MaterialExpressiveTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }

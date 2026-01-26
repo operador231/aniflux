@@ -111,6 +111,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         freeCompilerArgs.addAll(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xexplicit-api=warning",
@@ -122,6 +123,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:navigation"))
+    implementation(project(":feature:feed:impl"))
+    implementation(project(":feature:catalog:impl"))
 
     // Hilt
     implementation(libs.hilt.android)
@@ -141,13 +145,14 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore.preferences)
 
-    // Collections
-    implementation(libs.kotlinx.collections.immutable)
-
     // Logging
     implementation(libs.timber)
 
-    implementation(libs.kotlinx.coroutines.android)
+    // Images
+    implementation(libs.coil.compose)
+
+
+    //implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -158,7 +163,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
+    //testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

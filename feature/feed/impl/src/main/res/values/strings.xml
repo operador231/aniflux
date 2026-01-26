@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="st_feat_in_dev">This feature is currently in development</string>
+    <string name="st_home">Home</string>
+</resources>
