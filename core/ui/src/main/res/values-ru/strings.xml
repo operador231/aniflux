@@ -2,4 +2,12 @@
 <resources>
     <string name="st_no_features_found">Модули не найдены.</string>
     <string name="st_catalog">Каталог</string>
+    <string name="st_no_network_connection_err">Нет соединения с интернетом</string>
+    <string name="st_retry">Попробовать снова</string>
+    <string name="st_msg_nothing_found">Поиски завершились провалом…</string>
+    <string name="st_msg_server_unavailable">Сервер задумался о вечном</string>
+    <string name="st_msg_access_denied">Кажется, Вам сюда нельзя</string>
+    <string name="st_msg_unknown_error">Кажется что-то пошло не так…</string>
+    <string name="st_msg_auth_required">Вы не авторизованы. Хотите войти в аккаунт?</string>
+    <string name="st_sign_in">Войти</string>
 </resources>

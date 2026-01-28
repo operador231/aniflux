@@ -2,4 +2,12 @@
 <resources>
     <string name="st_no_features_found">No features found.</string>
     <string name="st_catalog">Catalog</string>
+    <string name="st_no_network_connection_err">Oops! Looks like the internet has ghosted us</string>
+    <string name="st_retry">Retry</string>
+    <string name="st_msg_nothing_found">The results you’re looking for weren\'t found</string>
+    <string name="st_msg_server_unavailable">Server is taking a break, try again later</string>
+    <string name="st_msg_access_denied">Looks like you can\'t go here</string>
+    <string name="st_msg_unknown_error">Something went wrong…</string>
+    <string name="st_msg_auth_required">You have to sign in to access this function. Do you want to sign in?</string>
+    <string name="st_sign_in">Sign in</string>
 </resources>

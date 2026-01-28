@@ -17,6 +17,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.operador231.core.domain.model.DomainError
+import com.github.operador231.core.ui.screen.ErrorContent
+import com.github.operador231.core.ui.screen.StateScreen
 import com.github.operador231.core.ui.theme.AniFluxTheme
 import com.github.operador231.feature.catalog.impl.R
 import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogViewModel
@@ -56,22 +59,14 @@ private fun CatalogTopBar(
 private fun CatalogContent(
     contentPadding: PaddingValues = PaddingValues()
 ) {
-    LazyColumn(
+
+    StateScreen(content = { ErrorContent(error = DomainError.UnknownError, onAction = {}) })
+    /*LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(contentPadding)
             .padding(horizontal = AniFluxTheme.paddings.medium)
     ) {
-        repeat(70) {
-            item {
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(vertical = AniFluxTheme.paddings.small)
-                ) {
-                    Text("ça marche !")
-                }
-            }
-        }
-    }
+
+    }*/
 }

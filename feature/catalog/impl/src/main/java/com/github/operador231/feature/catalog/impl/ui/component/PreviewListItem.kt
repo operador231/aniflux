@@ -139,8 +139,7 @@ internal fun AnimeMeta(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .height(AnimeListItemDefaults.height),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(AniFluxTheme.paddings.extraSmall)
     ) {
         Text(
@@ -150,7 +149,7 @@ internal fun AnimeMeta(
             overflow = TextOverflow.Ellipsis
         )
 
-        val genresLabel = remember(item.genres.map { it.id }) {
+        val genresLabel = remember(item.genres) {
             item.genres.joinToString(", ") { it.name }.trim()
         }
         if (genresLabel.isNotEmpty()) {

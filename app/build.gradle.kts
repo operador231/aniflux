@@ -150,7 +150,11 @@ dependencies {
 
     // Images
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
+    // OkHttp3
+    implementation(libs.okhttp.core)
+    implementation(platform(libs.okhttp.bom))
 
     //implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)

@@ -7,9 +7,11 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import dagger.hilt.android.HiltAndroidApp
+import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,22 +24,22 @@ public class AniFluxApplication : Application(), SingletonImageLoader.Factory {
         Timber.plant(Timber.DebugTree())
     }
 
-   /* @Inject
+    @Inject
     @Named("ImageClient")
-    public lateinit var okHttpClient: okhttp3.OkHttpClient*/
+    public lateinit var okHttpClient: OkHttpClient
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader.Builder(context)
-            /*.components {
+            .components {
                 add(OkHttpNetworkFetcherFactory(
                     callFactory = { okHttpClient }
                 ))
-            }*/
+            }
             .crossfade(true)
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir.resolve("image_cache"))
-                    .maxSizeBytes(512L * 1024 * 1024)
+                    .maxSizeBytes(1024L * 1024 * 1024)
                     .build()
             }
             .memoryCache {

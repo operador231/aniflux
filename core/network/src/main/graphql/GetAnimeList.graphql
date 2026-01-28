@@ -1,0 +1,34 @@
+query GetAnimeList($page: PositiveInt, $limit: PositiveInt, $order: OrderEnum) {
+    animes(page: $page, limit: $limit, order: $order) {
+        id
+        name
+        russian
+        kind
+        rating
+        score
+        status
+        airedOn {
+            year month day
+        }
+        releasedOn {
+            year month day
+        }
+        season
+
+        poster {
+            id main2xUrl
+        }
+
+        isCensored
+
+        genres {
+            id name russian kind
+        }
+
+        studios {
+            id name imageUrl
+        }
+
+        description
+    }
+}

@@ -27,9 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import com.github.operador231.core.navigation.FeatureApi
 import com.github.operador231.core.navigation.NavigationPriority
 import com.github.operador231.core.navigation.Route
-import com.github.operador231.core.ui.screen.StubScreen
+import com.github.operador231.core.ui.screen.StateScreen
 import com.github.operador231.core.ui.theme.AniFluxTheme
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -117,17 +118,22 @@ private fun AniFluxNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = startRoute ?: Route.Stub
+        startDestination = startRoute ?: Route.StateScreen
     ) {
-        composable<Route.Stub> {
-            StubScreen()
+        composable<Route.StateScreen> {
+            StateScreen()
         }
 
         featureApis.forEach { api ->
-            api.registerGraph(
-                navGraphBuilder = this,
-                navController = navController
-            )
+            try {
+                api.registerGraph(
+                    navGraphBuilder = this,
+                    navController = navController
+                )
+            } catch (ex: Exception) {
+                Timber.e("Failed to register ${api::class.simpleName}")
+                Timber.e(ex)
+            }
         }
     }
 }

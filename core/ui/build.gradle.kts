@@ -7,6 +7,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+
     api(libs.lottie.compose)
     api(libs.coil.compose)
     api(libs.androidx.ui.graphics)

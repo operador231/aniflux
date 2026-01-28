@@ -1,0 +1,46 @@
+query GetAnime($id: String!) {
+    animes(ids: $id, limit: 1) {
+        id
+        name
+        russian
+        japanese
+        synonyms
+        kind
+        rating
+        score
+        status
+        episodes
+        episodesAired
+        duration
+        releasedOn {
+            year month day
+        }
+        season
+
+        poster {
+            id originalUrl
+        }
+
+        isCensored
+
+        genres {
+            id name russian kind
+        }
+        studios {
+            id name imageUrl
+        }
+
+        related {
+            id
+            anime {
+                id name
+            }
+        }
+
+        screenshots {
+            id originalUrl x332Url
+        }
+
+        descriptionHtml
+    }
+}

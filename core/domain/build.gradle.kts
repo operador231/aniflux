@@ -26,4 +26,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     // Collections
     implementation(libs.kotlinx.collections.immutable)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
 }

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 public interface Route {
 
     @Serializable
-    public data object Stub : Route
+    public data object StateScreen : Route
 }

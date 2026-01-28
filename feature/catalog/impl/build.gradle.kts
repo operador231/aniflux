@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
     implementation(project(":core:domain"))
+    implementation(project(":core:network"))
 
     implementation(libs.lottie.compose)
     implementation(libs.coil.compose)

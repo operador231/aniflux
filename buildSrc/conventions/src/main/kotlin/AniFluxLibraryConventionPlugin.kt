@@ -33,7 +33,6 @@ class AniFluxLibraryConventionPlugin : Plugin<Project> {
 
                 buildFeatures {
                     compose = true
-                    buildConfig = true
                 }
 
                 defaultConfig {
