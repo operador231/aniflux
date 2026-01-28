@@ -2,10 +2,6 @@ package com.github.operador231.feature.catalog.impl.ui.screen
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,7 +16,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.github.operador231.core.domain.model.DomainError
 import com.github.operador231.core.ui.screen.ErrorContent
 import com.github.operador231.core.ui.screen.StateScreen
-import com.github.operador231.core.ui.theme.AniFluxTheme
 import com.github.operador231.feature.catalog.impl.R
 import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogViewModel
 

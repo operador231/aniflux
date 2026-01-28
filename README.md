@@ -1,6 +1,6 @@
 # AniFlux
 
-**AniFlux** is an Android client for anime tracking and content discovery built with **Jetpack Compose**.
+**AniFlux** is an Android client for anime tracking built with **Jetpack Compose**.
 
 > 🚧 **Project Status:** Active development  
 > The project is still experimental. APIs, features, and architecture may change.
@@ -12,7 +12,7 @@
 - **UI:** Jetpack Compose
 - **Architecture:** Clean Architecture + MVVM
 - **Dependency Injection:** Hilt
-- **Networking:** Retrofit + KotlinX Serialization
+- **Networking:** Retrofit, Apollo + KotlinX Serialization
 - **Async:** Kotlin Coroutines & Flow
 - **Pagination:** Paging 3
 - **Caching:** Room
@@ -21,11 +21,33 @@
 ## 🏗️ Project Structure
 
 - `:app`
-    - Application entry point
-    - Navigation
-    - UI layer & DI setup
-- `:core:ui`
-  - Shared design system, themes and atomic UI components.
+  - Application entry point
+  - DI setup
+  - Navigation host
+- `:core`
+  - `:domain`
+    - Business models
+    - Repository contracts
+    - Use cases
+    - Pure kotlin
+  - `:network`
+    - API services
+    - DTO models
+    - Serialization setup
+  - `:navigation`
+    - Navigation contracts
+    - Cross-feature navigation abstractions
+  - `:ui`
+    - Design system
+    - Common UI components
+- `:feature`
+  - `:catalog`
+    - `:api`
+      - Public feature contracts
+    - `:impl`
+      - UI screens
+      - ViewModels
+      - Feature-specific logic
 
 ---
 
