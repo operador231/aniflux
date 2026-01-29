@@ -29,4 +29,7 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
+
+    // Paging 3
+    implementation(libs.androidx.paging.common)
 }

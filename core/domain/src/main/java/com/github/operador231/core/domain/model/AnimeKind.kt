@@ -5,7 +5,7 @@ package com.github.operador231.core.domain.model
  *
  * @property value The integer representation of the anime type.
  */
-public enum class AnimeType(public val value: Int) {
+public enum class AnimeKind(public val value: Int) {
     /** An unknown or unclassified anime type. */
     UNKNOWN(-1),
 
@@ -38,13 +38,13 @@ public enum class AnimeType(public val value: Int) {
 
     public companion object {
         /**
-         * Returns the [AnimeType] corresponding to the given [value].
-         * If no matching [AnimeType] is found, [UNKNOWN] is returned.
+         * Returns the [AnimeKind] corresponding to the given [value].
+         * If no matching [AnimeKind] is found, [UNKNOWN] is returned.
          *
-         * @param value The integer value of the [AnimeType].
-         * @return The corresponding [AnimeType]
+         * @param value The integer value of the [AnimeKind].
+         * @return The corresponding [AnimeKind]
          * */
-        public fun fromValue(value: Int): AnimeType {
+        public fun fromValue(value: Int): AnimeKind {
             return entries.firstOrNull { it.value == value } ?: UNKNOWN
         }
     }

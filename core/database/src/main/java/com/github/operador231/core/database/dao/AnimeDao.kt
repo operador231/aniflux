@@ -22,7 +22,7 @@ public interface AnimeDao {
      * @return A [PagingSource] of [AnimeAggregate]s.
      * */
     @Transaction
-    @Query("SELECT * FROM anime")
+    @Query("SELECT * FROM anime ORDER BY position ASC")
     public fun getAnime(): PagingSource<Int, AnimeAggregate>
 
     /**

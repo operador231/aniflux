@@ -10,4 +10,29 @@
     <string name="st_msg_unknown_error">Something went wrong…</string>
     <string name="st_msg_auth_required">You have to sign in to access this function. Do you want to sign in?</string>
     <string name="st_sign_in">Sign in</string>
+    <string name="st_unknown">Unknown</string>
+    <string name="st_tv">TV</string>
+    <string name="st_movie">Movie</string>
+    <string name="st_ova" translatable="false">OVA</string>
+    <string name="st_ona" translatable="false">ONA</string>
+    <string name="st_special">Special</string>
+    <string name="st_tv_special">TV Special</string>
+    <string name="st_music">Music</string>
+    <string name="st_pv">Promotion</string>
+    <string name="st_cm" translatable="false">CM</string>
+    <string name="st_announcement">Announcement</string>
+    <string name="st_ongoing">Ongoing</string>
+    <string name="st_released">Released</string>
+    <string name="st_paused">Paused</string>
+    <string name="st_discontinued">Discontinued</string>
+    <string name="st_winter">Winter</string>
+    <string name="st_spring">Spring</string>
+    <string name="st_summer">Summer</string>
+    <string name="st_autumn">Fall</string>
+    <string name="st_rating_g" translatable="false">0+</string>
+    <string name="st_rating_pg" translatable="false">6+</string>
+    <string name="st_rating_pg_13" translatable="false">13+</string>
+    <string name="st_rating_r" translatable="false">17+</string>
+    <string name="st_rating_r_plus" translatable="false">18+</string>
+    <string name="st_rating_rx" translatable="false">18+</string>
 </resources>

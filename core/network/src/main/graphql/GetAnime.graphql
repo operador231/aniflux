@@ -13,13 +13,16 @@ query GetAnime($id: String!) {
         episodes
         episodesAired
         duration
+        airedOn {
+            year month day
+        }
         releasedOn {
             year month day
         }
         season
 
         poster {
-            id originalUrl
+            id originalUrl preview2xUrl
         }
 
         isCensored
@@ -42,6 +45,7 @@ query GetAnime($id: String!) {
             id originalUrl x332Url
         }
 
+        description
         descriptionHtml
     }
 }

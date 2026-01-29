@@ -1,9 +1,11 @@
 package com.github.operador231.aniflux
 
 import android.app.Application
+import androidx.appcompat.content.res.AppCompatResources
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
+import coil3.asImage
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
@@ -29,6 +31,10 @@ public class AniFluxApplication : Application(), SingletonImageLoader.Factory {
     public lateinit var okHttpClient: OkHttpClient
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {
+        val placeholderImage = AppCompatResources.getDrawable(
+            context,
+            com.github.operador231.core.ui.R.drawable.poster_placeholder
+        )?.asImage()
         return ImageLoader.Builder(context)
             .components {
                 add(OkHttpNetworkFetcherFactory(
@@ -50,9 +56,8 @@ public class AniFluxApplication : Application(), SingletonImageLoader.Factory {
             .networkCachePolicy(CachePolicy.ENABLED)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
-            /*.placeholder { context.getDrawable(R.drawable.poster_placeholder)?.asImage() }
-            .error { context.getDrawable(R.drawable.poster_placeholder)?.asImage() }
-            .fallback { context.getDrawable(R.drawable.poster_placeholder)?.asImage() }*/
+            .error(placeholderImage)
+            .fallback(placeholderImage)
             .build()
     }
 }

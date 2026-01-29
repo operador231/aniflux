@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="st_catalog">Catalog</string>
+    <string name="st_no_description">This title doesn\'t have description yet.</string>
 </resources>

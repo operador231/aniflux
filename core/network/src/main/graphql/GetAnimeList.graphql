@@ -1,6 +1,7 @@
 query GetAnimeList($page: PositiveInt, $limit: PositiveInt, $order: OrderEnum) {
     animes(page: $page, limit: $limit, order: $order) {
         id
+        malId
         name
         russian
         kind

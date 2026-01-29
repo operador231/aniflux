@@ -12,4 +12,6 @@ dependencies {
     api(libs.lottie.compose)
     api(libs.coil.compose)
     api(libs.androidx.ui.graphics)
+
+    api(libs.androidx.compose.material3.windowSizeClass)
 }

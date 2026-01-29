@@ -10,4 +10,20 @@
     <string name="st_msg_unknown_error">Кажется что-то пошло не так…</string>
     <string name="st_msg_auth_required">Вы не авторизованы. Хотите войти в аккаунт?</string>
     <string name="st_sign_in">Войти</string>
+    <string name="st_unknown">Неизвестно</string>
+    <string name="st_tv">Сериал</string>
+    <string name="st_movie">Фильм</string>
+    <string name="st_special">Спешл</string>
+    <string name="st_tv_special">ТВ Спешл</string>
+    <string name="st_music">Музыка</string>
+    <string name="st_pv">Промо</string>
+    <string name="st_announcement">Анонс</string>
+    <string name="st_ongoing">Онгоинг</string>
+    <string name="st_released">Вышел</string>
+    <string name="st_paused">Приоставновлен</string>
+    <string name="st_discontinued">Отменён</string>
+    <string name="st_winter">Зима</string>
+    <string name="st_spring">Весна</string>
+    <string name="st_summer">Лето</string>
+    <string name="st_autumn">Осень</string>
 </resources>

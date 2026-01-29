@@ -11,7 +11,10 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -24,11 +27,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import com.github.operador231.core.navigation.FeatureApi
 import com.github.operador231.core.navigation.NavigationPriority
 import com.github.operador231.core.navigation.Route
 import com.github.operador231.core.ui.screen.StateScreen
 import com.github.operador231.core.ui.theme.AniFluxTheme
+import com.github.operador231.core.ui.utils.LocalWindowSizeClass
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -39,6 +44,7 @@ public class MainActivity : ComponentActivity() {
     @JvmSuppressWildcards
     public lateinit var featureApis: Set<FeatureApi>
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,7 +53,12 @@ public class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AniFluxTheme {
-                AniFluxApp(featureApis)
+                val windowSizeClass: WindowSizeClass = calculateWindowSizeClass(this)
+                CompositionLocalProvider(
+                    LocalWindowSizeClass provides windowSizeClass
+                ) {
+                    AniFluxApp(featureApis)
+                }
             }
         }
     }
