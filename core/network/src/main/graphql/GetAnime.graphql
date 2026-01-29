@@ -1,6 +1,7 @@
 query GetAnime($id: String!) {
     animes(ids: $id, limit: 1) {
         id
+        malId
         name
         russian
         japanese
