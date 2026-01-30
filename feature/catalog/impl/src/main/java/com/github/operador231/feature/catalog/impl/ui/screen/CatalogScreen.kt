@@ -26,8 +26,10 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -73,6 +75,7 @@ internal fun CatalogScreen(
     val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
 
     val isError = loadState is LoadState.Error
+    var errorMessage by remember { mutableStateOf("") }
     val contentIsEmpty = anime.loadState.source.refresh is LoadState.NotLoading && anime.itemCount == 0
     val isInitialLoading = anime.loadState.source.refresh is LoadState.Loading && anime.itemCount == 0
     val isRefreshing = anime.loadState.mediator?.refresh is LoadState.Loading
@@ -86,9 +89,9 @@ internal fun CatalogScreen(
         when (effect) {
             is CatalogUiEffect.OnNavigate -> {}
             is CatalogUiEffect.OnError -> {
-                val message = effect.error.getErrorMessage(ctx)
+                errorMessage = effect.error.getErrorMessage(ctx)
                 scope.launch {
-                    snackbarHostState.showSnackbar(message = message)
+                    snackbarHostState.showSnackbar(message = errorMessage)
                 }
             }
             is CatalogUiEffect.OnRetry -> anime.refresh()
@@ -117,7 +120,7 @@ internal fun CatalogScreen(
                             userScrollEnabled = false
                         )
                         isError && anime.itemCount == 0 -> StateScreen(
-                            text = loadState.error.toAppException().toDomain().getErrorMessage(ctx),
+                            text = errorMessage,
                             action = {
                                 TextButton(onClick = viewModel::onRetry) {
                                     Text(stringResource(RCore.string.st_retry))

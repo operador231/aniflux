@@ -2,10 +2,13 @@ package com.github.operador231.core.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -36,16 +39,23 @@ public abstract class BaseViewModel<S : UiState<Any>, F : UiEffect>(
     public val uiState: StateFlow<S> = _uiState.asStateFlow()
 
     /**
-     * Internal channel for side-effects. Buffered to ensure effects are not lost
-     * if the UI is temporarily not consuming them.
-     * */
-    private val _uiEffect = Channel<F>(Channel.BUFFERED)
+     * Internal SharedFlow for side-effects.
+     * Using replay = 0 ensures that events (like SnackBar or Navigation)
+     * are not re-delivered on configuration changes (e.g., screen rotation).
+     * * Buffered with [BufferOverflow.DROP_OLDEST] to prevent blocking the ViewModel
+     * if the UI is temporarily unable to process effects.
+     */
+    private val _uiEffect = MutableSharedFlow<F>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
 
     /**
      * A [Flow] of one-time events ([UiEffect]).
      * These should be collected by the UI (e.g. via LaunchedEffect in Compose)
      * */
-    public val uiEffect: Flow<F> = _uiEffect.receiveAsFlow()
+    public val uiEffect: Flow<F> = _uiEffect.asSharedFlow()
 
     /**
      * Updates the current [uiState] using the provided [reducer].
@@ -62,6 +72,6 @@ public abstract class BaseViewModel<S : UiState<Any>, F : UiEffect>(
      * @param effect The effect to be triggered.
      * */
     protected fun sendEffect(effect: F) {
-        viewModelScope.launch { _uiEffect.send(effect) }
+        viewModelScope.launch { _uiEffect.emit(effect) }
     }
 }
