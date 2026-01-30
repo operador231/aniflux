@@ -35,4 +35,7 @@
     <string name="st_rating_r" translatable="false">17+</string>
     <string name="st_rating_r_plus" translatable="false">18+</string>
     <string name="st_rating_rx" translatable="false">18+</string>
+    <string name="st_no_content">Nothing to show</string>
+    <string name="st_offline">You\'re offline</string>
+    <string name="st_network_connection_restored">Back online</string>
 </resources>

@@ -52,7 +52,6 @@ public class AnimeRemoteMediator(
                 page = Optional.Present(page),
                 limit = Optional.Present(20)
             )
-            Timber.d(response.toString())
 
             when (response) {
                 is NetworkResult.Ok -> {

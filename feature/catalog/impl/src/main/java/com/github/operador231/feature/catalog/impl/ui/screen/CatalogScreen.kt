@@ -2,6 +2,7 @@ package com.github.operador231.feature.catalog.impl.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -25,6 +25,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,7 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.paging.CombinedLoadStates
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -42,10 +43,12 @@ import com.github.operador231.core.data.mapper.toAppException
 import com.github.operador231.core.data.mapper.toDomain
 import com.github.operador231.core.domain.model.Media
 import com.github.operador231.core.ui.annotations.ExperimentalAniFluxUi
-import com.github.operador231.core.ui.base.ObserveAsEvents
+import com.github.operador231.core.ui.component.ConnectivityIndicator
 import com.github.operador231.core.ui.extensions.getErrorMessage
+import com.github.operador231.core.ui.screen.StateScreen
 import com.github.operador231.core.ui.theme.AniFluxTheme
 import com.github.operador231.core.ui.utils.LocalWindowSizeClass
+import com.github.operador231.core.ui.utils.ObserveAsEvents
 import com.github.operador231.feature.catalog.impl.R
 import com.github.operador231.feature.catalog.impl.ui.component.PreviewDefaults
 import com.github.operador231.feature.catalog.impl.ui.component.PreviewGridItem
@@ -54,6 +57,7 @@ import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogUiEffect
 import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import com.github.operador231.core.ui.R as RCore
 
 @Composable
 internal fun CatalogScreen(
@@ -66,8 +70,15 @@ internal fun CatalogScreen(
     val loadState = anime.loadState.mediator?.refresh ?: anime.loadState.refresh
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
+
+    val isError = loadState is LoadState.Error
+    val contentIsEmpty = anime.loadState.source.refresh is LoadState.NotLoading && anime.itemCount == 0
+    val isInitialLoading = anime.loadState.source.refresh is LoadState.Loading && anime.itemCount == 0
+    val isRefreshing = anime.loadState.mediator?.refresh is LoadState.Loading
+
     LaunchedEffect(loadState) {
-        if (loadState is LoadState.Error) viewModel.onError(loadState.error)
+        if (isError) viewModel.onError(loadState.error)
         else Timber.d(loadState.toString())
     }
 
@@ -80,6 +91,7 @@ internal fun CatalogScreen(
                     snackbarHostState.showSnackbar(message = message)
                 }
             }
+            is CatalogUiEffect.OnRetry -> anime.refresh()
         }
     }
 
@@ -90,17 +102,38 @@ internal fun CatalogScreen(
         topBar = { CatalogTopBar(scrollBehavior) },
         snackbarHost = { CatalogSnackBarHost(snackbarHostState) }
     ) { innerPaddings ->
-        val isRefreshing = anime.loadState.mediator?.refresh is LoadState.Loading ||
-                anime.loadState.refresh is LoadState.Loading
-
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                anime.refresh()
-            },
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier.fillMaxSize().padding(innerPaddings)
         ) {
-            CatalogContent(content = anime, contentPadding = innerPaddings)
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { anime.refresh() },
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    when {
+                        isInitialLoading -> StateScreen(
+                            content = { LoadingIndicator() },
+                            userScrollEnabled = false
+                        )
+                        isError && anime.itemCount == 0 -> StateScreen(
+                            text = loadState.error.toAppException().toDomain().getErrorMessage(ctx),
+                            action = {
+                                TextButton(onClick = viewModel::onRetry) {
+                                    Text(stringResource(RCore.string.st_retry))
+                                }
+                            }
+                        )
+                        contentIsEmpty && !isRefreshing -> StateScreen(
+                            content = { Text(stringResource(RCore.string.st_no_content)) },
+                            userScrollEnabled = true
+                        )
+                        else -> CatalogContent(content = anime)
+                    }
+                }
+            }
+
+            ConnectivityIndicator(networkStatus = networkStatus)
         }
     }
 }
@@ -142,80 +175,28 @@ private fun CatalogContent(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     val sizeClass = LocalWindowSizeClass.current
-    val loadState = content.loadState
-    val isMediatorLoading = loadState.mediator?.refresh is LoadState.Loading
-    val isSourceLoading = loadState.source.refresh is LoadState.Loading
-    val isInitialLoading = (isMediatorLoading || isSourceLoading) && content.itemCount == 0
-    val contentIsEmpty = !isMediatorLoading && !isSourceLoading &&
-            content.itemCount == 0 && loadState.mediator?.refresh != null
-
     when (sizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> ListContent(
-            content = content,
-            contentPadding = contentPadding,
-            loadState = loadState,
-            isInitialLoading = isInitialLoading,
-            contentIsEmpty = contentIsEmpty
-        )
-        else -> GridContent(
-            content = content,
-            contentPadding = contentPadding,
-            loadState = loadState,
-            isInitialLoading = isInitialLoading,
-            contentIsEmpty = contentIsEmpty
-        )
+        WindowWidthSizeClass.Compact -> ListContent(content = content)
+        else -> GridContent(content = content)
     }
 }
 
 @OptIn(ExperimentalAniFluxUi::class)
 @Composable
-private fun ListContent(
-    content: LazyPagingItems<Media>,
-    contentPadding: PaddingValues = PaddingValues(),
-    loadState: CombinedLoadStates = content.loadState,
-    isInitialLoading: Boolean = false,
-    contentIsEmpty: Boolean = false
-) {
+private fun ListContent(content: LazyPagingItems<Media>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = AniFluxTheme.paddings.medium),
-        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(AniFluxTheme.paddings.small)
     ) {
         item { Spacer(modifier = Modifier.padding(top = AniFluxTheme.paddings.small)) }
-        when {
-            isInitialLoading -> {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        LoadingIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                }
-            }
-            contentIsEmpty -> {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text("Nothing to show")
-                    }
-                }
-            }
-            else -> {
-                items(
-                    count = content.itemCount,
-                    key = content.itemKey { it.id.value.toInt() }
-                ) { idx ->
-                    content[idx]?.let {
-                        PreviewListItem(item = it)
-                    }
-                }
-            }
-        }
-
-        if (loadState.mediator?.append is LoadState.Loading) {
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    LoadingIndicator(modifier = Modifier.align(Alignment.Center))
-                }
+        items(
+            count = content.itemCount,
+            key = content.itemKey { it.id.value.toInt() }
+        ) { idx ->
+            content[idx]?.let {
+                PreviewListItem(item = it)
             }
         }
     }
@@ -223,16 +204,10 @@ private fun ListContent(
 
 @OptIn(ExperimentalAniFluxUi::class)
 @Composable
-private fun GridContent(
-    content: LazyPagingItems<Media>,
-    contentPadding: PaddingValues = PaddingValues(),
-    loadState: CombinedLoadStates = content.loadState,
-    isInitialLoading: Boolean = false,
-    contentIsEmpty: Boolean = false
+private fun GridContent(content: LazyPagingItems<Media>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(PreviewDefaults.PosterWidth),
-        contentPadding = contentPadding,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = AniFluxTheme.paddings.medium),
@@ -247,14 +222,6 @@ private fun GridContent(
                 PreviewGridItem(
                     item = it
                 )
-            }
-        }
-
-        if (loadState.mediator?.append is LoadState.Loading) {
-            item {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    LoadingIndicator(modifier = Modifier.align(Alignment.Center))
-                }
             }
         }
     }

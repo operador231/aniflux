@@ -1,4 +1,4 @@
-package com.github.operador231.core.ui.base
+package com.github.operador231.core.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

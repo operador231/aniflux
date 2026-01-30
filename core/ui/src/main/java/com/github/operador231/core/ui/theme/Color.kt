@@ -11,6 +11,8 @@ public val scoreNormalColor: Color = Color(0xFFEAB308)
 public val scoreBadColor: Color = Color(0xFFEF4444)
 public val scoreWorstColor: Color = Color(0xFF333333)
 
+public val onlineColor: Color = Color(0xFF2E9B39)
+
 /* Age rating colors */
 /*public val ratingGColor = Color(0xFF4CAF50)
 public val ratingPGColor = Color(0xFF66BB6A)

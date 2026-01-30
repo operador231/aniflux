@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -82,6 +85,33 @@ public fun StateScreen(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         content.invoke(this)
+    }
+}
+
+/**
+ * An universal fallback and state display screen.
+ *
+ * Used as a placeholder when feature modules are missing, content is unavailable
+ * or during system-level states.
+ *
+ * @param modifier The [Modifier] to be applied to the root container.
+ * @param content Slot for custom content.
+ * @param userScrollEnabled A flag indicating whether the content should be scrollable.
+ *
+ * */
+@Composable
+public fun StateScreen(
+    modifier: Modifier = Modifier,
+    content: (@Composable LazyItemScope.() -> Unit),
+    userScrollEnabled: Boolean = true
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        userScrollEnabled = userScrollEnabled
+    ) {
+        item { content.invoke(this) }
     }
 }
 

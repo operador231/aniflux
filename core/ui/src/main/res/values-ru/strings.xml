@@ -26,4 +26,7 @@
     <string name="st_spring">Весна</string>
     <string name="st_summer">Лето</string>
     <string name="st_autumn">Осень</string>
+    <string name="st_no_content">Вокруг ничего, только пустота…</string>
+    <string name="st_offline">Оффлайн</string>
+    <string name="st_network_connection_restored">Соединение восстановлено</string>
 </resources>
