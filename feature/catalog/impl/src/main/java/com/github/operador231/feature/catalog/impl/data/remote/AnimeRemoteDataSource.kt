@@ -2,14 +2,19 @@ package com.github.operador231.feature.catalog.impl.data.remote
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.exception.ApolloNetworkException
 import com.github.operador231.core.data.di.IODispatcher
 import com.github.operador231.core.data.exceptions.NotFoundException
+import com.github.operador231.core.data.exceptions.OfflineException
+import com.github.operador231.core.data.exceptions.UnknownErrorException
 import com.github.operador231.core.domain.model.MediaId
 import com.github.operador231.core.network.graphql.GetAnimeListQuery
 import com.github.operador231.core.network.graphql.GetAnimeQuery
 import com.github.operador231.core.network.model.NetworkResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okio.IOException
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -49,11 +54,14 @@ public class AnimeRemoteDataSource @Inject constructor(
                 limit = limit
             )).execute()
 
-            if (response.hasErrors()) {
-                NetworkResult.Err(Exception(response.errors?.firstOrNull()?.message))
-            } else {
-                val data = response.data?.animes ?: emptyList()
-                NetworkResult.Ok(data)
+            if (response.data != null) NetworkResult.Ok(response.data!!.animes)
+            else {
+                if (response.exception != null) {
+                    when (val ex = response.exception) {
+                        is ApolloNetworkException -> NetworkResult.Err(IOException(ex.message, ex))
+                        else -> NetworkResult.Err(Exception(ex?.message, ex))
+                    }
+                } else NetworkResult.Err(UnknownErrorException())
             }
         } catch (ex: Exception) {
             NetworkResult.Err(ex)

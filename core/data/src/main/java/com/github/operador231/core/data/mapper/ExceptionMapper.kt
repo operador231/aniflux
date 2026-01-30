@@ -16,6 +16,7 @@ import timber.log.Timber
 import java.net.SocketTimeoutException
 
 public fun Throwable.toAppException(): AppException = when (this) {
+    is AppException -> this
     is SocketTimeoutException -> ServerErrorException()
     is HttpException -> when (this.code()) {
         401 -> UnauthorizedException()

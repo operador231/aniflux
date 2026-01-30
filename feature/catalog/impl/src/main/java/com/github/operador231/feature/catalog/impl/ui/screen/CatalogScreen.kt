@@ -13,16 +13,24 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.CombinedLoadStates
@@ -34,27 +42,44 @@ import com.github.operador231.core.data.mapper.toAppException
 import com.github.operador231.core.data.mapper.toDomain
 import com.github.operador231.core.domain.model.Media
 import com.github.operador231.core.ui.annotations.ExperimentalAniFluxUi
+import com.github.operador231.core.ui.base.ObserveAsEvents
+import com.github.operador231.core.ui.extensions.getErrorMessage
 import com.github.operador231.core.ui.theme.AniFluxTheme
 import com.github.operador231.core.ui.utils.LocalWindowSizeClass
 import com.github.operador231.feature.catalog.impl.R
 import com.github.operador231.feature.catalog.impl.ui.component.PreviewDefaults
 import com.github.operador231.feature.catalog.impl.ui.component.PreviewGridItem
 import com.github.operador231.feature.catalog.impl.ui.component.PreviewListItem
+import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogUiEffect
 import com.github.operador231.feature.catalog.impl.ui.viewmodel.CatalogViewModel
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 internal fun CatalogScreen(
     viewModel: CatalogViewModel = hiltViewModel()
 ) {
+    val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val anime = viewModel.anime.collectAsLazyPagingItems()
     val loadState = anime.loadState.mediator?.refresh ?: anime.loadState.refresh
-    val domainError = (loadState as? LoadState.Error)?.error?.toAppException()?.toDomain()
-    val errorMessage = domainError?.message
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(domainError) {
-        if (domainError != null && errorMessage != null) {
-            // todo: show snackbar
+    LaunchedEffect(loadState) {
+        if (loadState is LoadState.Error) viewModel.onError(loadState.error)
+        else Timber.d(loadState.toString())
+    }
+
+    ObserveAsEvents(viewModel.uiEffect) { effect ->
+        when (effect) {
+            is CatalogUiEffect.OnNavigate -> {}
+            is CatalogUiEffect.OnError -> {
+                val message = effect.error.getErrorMessage(ctx)
+                scope.launch {
+                    snackbarHostState.showSnackbar(message = message)
+                }
+            }
         }
     }
 
@@ -62,14 +87,17 @@ internal fun CatalogScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { CatalogTopBar(scrollBehavior) }
+        topBar = { CatalogTopBar(scrollBehavior) },
+        snackbarHost = { CatalogSnackBarHost(snackbarHostState) }
     ) { innerPaddings ->
         val isRefreshing = anime.loadState.mediator?.refresh is LoadState.Loading ||
                 anime.loadState.refresh is LoadState.Loading
 
         PullToRefreshBox(
             isRefreshing = isRefreshing,
-            onRefresh = { anime.refresh() },
+            onRefresh = {
+                anime.refresh()
+            },
             modifier = Modifier.fillMaxSize()
         ) {
             CatalogContent(content = anime, contentPadding = innerPaddings)
@@ -82,12 +110,28 @@ private fun CatalogTopBar(
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = stringResource(R.string.st_catalog)
-            )
-        },
+        title = { Text(text = stringResource(R.string.st_catalog)) },
         scrollBehavior = scrollBehavior
+    )
+}
+
+@Composable
+private fun CatalogSnackBarHost(
+    state: SnackbarHostState
+) {
+    SnackbarHost(
+        hostState = state,
+        snackbar = { data ->
+            Snackbar(
+                content = { Text(text = data.visuals.message) },
+                dismissAction = {
+                    TextButton(onClick = data::dismiss) {
+                        Text(text = stringResource(R.string.st_ok))
+                    }
+                },
+                modifier = Modifier.padding(horizontal = AniFluxTheme.paddings.medium)
+            )
+        }
     )
 }
 

@@ -2,4 +2,5 @@
 <resources>
     <string name="st_catalog">Каталог</string>
     <string name="st_no_description">У этого тайтла пока нет описания.</string>
+    <string name="st_ok">OK</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.github.operador231.core.ui.extensions
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.github.operador231.core.domain.model.Action
@@ -12,6 +13,7 @@ import com.github.operador231.core.ui.model.Anim
  *
  * @return A string representing the error message.
  * */
+@Deprecated("Use getErrorMessage(ctx: Context) instead")
 @Composable
 public fun DomainError.getErrorMessage(): String = when (this) {
     is DomainError.Offline -> stringResource(R.string.st_no_network_connection_err)
@@ -23,6 +25,35 @@ public fun DomainError.getErrorMessage(): String = when (this) {
         else stringResource(R.string.st_msg_unknown_error)
     }
     else -> stringResource(R.string.st_msg_unknown_error)
+}
+
+/**
+ * Extension function to convert a [DomainError] into a human-readable error message.
+ *
+ * @return A string representing the error message.
+ * */
+public fun DomainError.getErrorMessage(ctx: Context): String = when (this) {
+    is DomainError.Offline -> ctx.getString(R.string.st_no_network_connection_err)
+    is DomainError.NotFound -> ctx.getString(R.string.st_msg_nothing_found)
+    is DomainError.ServerUnavailable -> ctx.getString(R.string.st_msg_server_unavailable)
+    is DomainError.AccessDenied -> ctx.getString(R.string.st_msg_access_denied)
+    is DomainError.ActionRequired -> {
+        if (this.action is Action.Auth) ctx.getString(R.string.st_msg_auth_required)
+        else ctx.getString(R.string.st_msg_unknown_error)
+    }
+    else -> ctx.getString(R.string.st_msg_unknown_error)
+}
+
+public fun DomainError.getErrorMessageResId(): Int = when (this) {
+    is DomainError.Offline -> R.string.st_no_network_connection_err
+    is DomainError.NotFound -> R.string.st_msg_nothing_found
+    is DomainError.ServerUnavailable -> R.string.st_msg_server_unavailable
+    is DomainError.AccessDenied -> R.string.st_msg_access_denied
+    is DomainError.ActionRequired -> {
+        if (this.action is Action.Auth) R.string.st_msg_auth_required
+        else R.string.st_msg_unknown_error
+    }
+    else -> R.string.st_msg_unknown_error
 }
 
 /**
